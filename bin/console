@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "bundler/setup"
-require "misete"
+require 'bundler/setup'
+require 'misete'
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
@@ -10,5 +11,18 @@ require "misete"
 # require "pry"
 # Pry.start
 
-require "irb"
+require 'irb'
+
+ROOT_DIR = File.expand_path('..', __dir__)
+RELOAD_DIRS = ['lib'].freeze
+
+def reload!
+  puts 'Reloading ...'
+
+  RELOAD_DIRS.each do |dir|
+    Dir.glob("#{ROOT_DIR}/#{dir}/**/*.rb").each { |file| load(file) }
+  end
+  true
+end
+
 IRB.start(__FILE__)
