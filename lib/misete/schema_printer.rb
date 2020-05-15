@@ -46,6 +46,6 @@ class Misete::SchemaPrinter
   end
 
   def self.print_column(name, data, indent)
-    print "# #{name.ljust(indent)} :#{data[:type]}, #{data[:params]}\n"
+    print "# #{name.ljust(indent)} :#{data.values_at(:type, :params).compact.join(', ')}\n"
   end
 end

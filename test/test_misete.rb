@@ -26,30 +26,29 @@ class TestMisete < Minitest::Test
 
   def test_full_parsing
     file = File.join(file_path('fixtures/schema.rb'))
-    parsed_file = Misete.schema(file)
-
+    parsed_file = Misete.schema(input: file)
+    
     assert_equal JSON.pretty_generate(parsed_file), strict_schema
   end
 
   def test_parsing_with_table_names
     file = File.join(file_path('fixtures/schema.rb'))
-    parsed_file = Misete.schema(file, table_names: ['users'])
+    parsed_file = Misete.schema(input: file, table_names: ['users'])
 
     assert_equal JSON.pretty_generate(parsed_file), filtered_schema
   end
 
-  def test_print_schema
-    file = File.join(file_path('fixtures/schema.rb'))
-    parsed_file = Misete.schema(file)
-    Misete::SchemaPrinter.show(parsed_file)
-  end
+  # def test_print_schema
+  #   file = File.join(file_path('fixtures/schema.rb'))
+  #   parsed_file = Misete.schema(input: file)
+  # end
 
   def strict_schema
-    File.read(file_path('fixtures/schema.json'))
+    File.read(file_path('fixtures/schema.json')).strip
   end
 
   def filtered_schema
-    File.read(file_path('fixtures/filtered_schema.json'))
+    File.read(file_path('fixtures/filtered_schema.json')).strip
   end
   def schema_output
     File.read(file_path('fixtures/output.txt'))

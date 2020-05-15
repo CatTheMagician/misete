@@ -28,7 +28,7 @@ require 'misete/version'
 module Misete
   def self.schema(options = {})
     schema_path = options.delete(:input) || File.join(Dir.pwd, 'db/schema.rb')
-    options.delete(:tables) if options[:tables].empty?
+    options.delete(:tables) if options[:tables]&.empty?
     parsed_schema = Misete::SchemaParser.parse(schema_path, options)
     Misete::SchemaPrinter.show(parsed_schema)
   end
