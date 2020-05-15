@@ -3,10 +3,16 @@
 require 'misete/version'
 
 module Misete
-  class Parser
-    def initialize(schema_path)
+  def self.schema(schema_path=nil, params={})
+    schema_path ||= File.join(Dir.pwd, 'db/schema.rb')
+    Misete::SchemaParser.parse(schema_path, params)
+  end
+
+  class SchemaParser
+    def initialize(schema_path, params={})
       @schema = init_hash
       @current_table = nil
+      @table_names = params[:table_names]
       @schema_path = schema_path
     end
 
@@ -15,8 +21,8 @@ module Misete
       @schema
     end
 
-    def self.parse(filename)
-      new(filename).parse
+    def self.parse(filename, params={})
+      new(filename, params).parse
     end
 
     private
@@ -30,7 +36,7 @@ module Misete
         process_columns(line)
       else
         process_table_name(line)
-        process_table_options(line)
+        process_table_options(line) if table?
       end
     end
 
@@ -58,6 +64,8 @@ module Misete
 
     def process_table_name(line)
       table_name = extract_table_name(line)
+      return if @table_names && !@table_names.include?(table_name)
+
       begin_table(table_name) if table_name
     end
 

@@ -1,0 +1,36 @@
+{
+  "tables": {
+    "users": {
+      "params": {
+        "force": "cascade"
+      },
+      "columns": {
+        "email": {
+          "type": "string",
+          "params": "default: \"\", null: false"
+        },
+        "encrypted_password": {
+          "type": "string",
+          "params": "default: \"\", null: false"
+        },
+        "reset_password_token": {
+          "type": "string"
+        },
+        "reset_password_sent_at": {
+          "type": "datetime"
+        },
+        "remember_created_at": {
+          "type": "datetime"
+        },
+        "created_at": {
+          "type": "datetime",
+          "params": "null: false"
+        },
+        "updated_at": {
+          "type": "datetime",
+          "params": "null: false"
+        }
+      }
+    }
+  }
+}
