@@ -5,7 +5,8 @@ require 'misete/version'
 module Misete
   class Parser
     def initialize(schema_path)
-      @schema = {}
+      @schema = init_hash
+      @current_table = nil
       @schema_path = schema_path
     end
 
@@ -29,6 +30,7 @@ module Misete
         process_columns(line)
       else
         process_table_name(line)
+        process_table_options(line)
       end
     end
 
@@ -50,7 +52,8 @@ module Misete
     end
 
     def add_column(column)
-      @schema[@current_table].merge!(column)
+      @schema[:tables][@current_table][:columns] ||= {}
+      @schema[:tables][@current_table][:columns].merge!(column)
     end
 
     def process_table_name(line)
@@ -63,9 +66,23 @@ module Misete
       matches[:table_name].strip if matches
     end
 
+    def process_table_options(line)
+      params = extract_options(line)
+      @schema[:tables][@current_table].merge!(params: params) if params
+    end
+
+    def extract_options(line)
+      matches = line.match(/create_table "(?<table_name>\S+)", (?<options>.*:.*?) .(?:(?!do).)/)
+
+      return unless matches && matches[:options]
+
+      pairs = matches[:options].gsub(':', '').split(',').map { |pairs| pairs.split(' ', 2) }
+      Hash[pairs]
+    end
+
     def begin_table(table_name)
       @current_table = table_name
-      @schema[table_name] = {}
+      @schema[:tables][table_name] = {}
     end
 
     def end_table
@@ -74,6 +91,10 @@ module Misete
 
     def table?
       @current_table
+    end
+
+    def init_hash
+      Hash.new { |k,v| k[v] = {} }
     end
   end
 end
