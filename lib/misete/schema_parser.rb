@@ -24,7 +24,6 @@ class Misete::SchemaParser
   def initialize(schema_path, params = {})
     @schema = init_hash
     @current_table = nil
-    pp params
     @table_names = params[:tables]
     @schema_path = schema_path
   end
