@@ -18,12 +18,21 @@ class TestMisete < Minitest::Test
     assert_equal JSON.pretty_generate(parsed_file), filtered_schema
   end
 
+  def test_print_schema
+    file = File.join(file_path('fixtures/schema.rb'))
+    parsed_file = Misete.schema(file)
+    Misete::SchemaPrinter.show(parsed_file)
+  end
+
   def strict_schema
     File.read(file_path('fixtures/schema.json'))
   end
 
   def filtered_schema
     File.read(file_path('fixtures/filtered_schema.json'))
+  end
+  def schema_output
+    File.read(file_path('fixtures/output.txt'))
   end
 
   def file_path(file)

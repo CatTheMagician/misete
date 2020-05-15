@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+STDOUT.sync = true
+
+require 'misete'
+require 'slop'
+require 'misete/version'
+
+return puts "try 'misete schema'" if ARGV[0] != 'schema'
+
+opts = Slop.parse(ARGV[1..-1], strict: true, help: true) do |o|
+  o.bool '-h', '--help', 'Show help'
+  o.string(
+    '-i',
+    '--input',
+    'Input file schema.rb',
+  )
+  o.array(
+    '-t',
+    '--tables',
+    'Table list to shown',
+    delimiter: ' '
+  )
+end
+
+if opts.help?
+  puts opts
+  exit
+end
+
+Misete.schema(opts.to_h)
